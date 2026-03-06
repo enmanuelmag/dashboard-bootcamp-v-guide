@@ -4,20 +4,32 @@ import type { CandidateType } from '#/types/candidate';
 
 export const Route = createFileRoute('/')({ component: App });
 
-const candidate: CandidateType = {
-  age: 26,
-  experience: 3,
-  name: 'Enmanuel adasd',
-  skills: ['JavaScript', 'React', 'Node.js'],
-  status: 'Reviewing',
-  working: true,
-};
+const candidates: CandidateType[] = [
+  {
+    age: 26,
+    experience: 3,
+    name: 'Enmanuel',
+    skills: ['JavaScript', 'React', 'Node.js'],
+    status: 'Reviewing',
+    working: true,
+  },
+  {
+    age: 30,
+    experience: 5,
+    name: 'Jane Doe',
+    skills: ['Python', 'Django', 'Machine Learning'],
+    status: 'Interviewing',
+    working: false,
+  },
+];
 
 function App() {
   // state
   return (
     <div>
-      <CandidateComp data={candidate} />
+      {candidates.map((candidate) => (
+        <CandidateComp data={candidate} />
+      ))}
     </div>
   );
 }
