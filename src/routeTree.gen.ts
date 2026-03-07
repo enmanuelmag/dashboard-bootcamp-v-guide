@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CandidatesIndexRouteImport } from './routes/candidates/index'
+import { Route as CandidatesCandidateIdRouteImport } from './routes/candidates/$candidateId'
+import { Route as CandidatesCandidateIdEditRouteImport } from './routes/candidates.$candidateId.edit'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -22,31 +25,74 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CandidatesIndexRoute = CandidatesIndexRouteImport.update({
+  id: '/candidates/',
+  path: '/candidates/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CandidatesCandidateIdRoute = CandidatesCandidateIdRouteImport.update({
+  id: '/candidates/$candidateId',
+  path: '/candidates/$candidateId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CandidatesCandidateIdEditRoute =
+  CandidatesCandidateIdEditRouteImport.update({
+    id: '/edit',
+    path: '/edit',
+    getParentRoute: () => CandidatesCandidateIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
+  '/candidates/': typeof CandidatesIndexRoute
+  '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
+  '/candidates': typeof CandidatesIndexRoute
+  '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
+  '/candidates/': typeof CandidatesIndexRoute
+  '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/candidates/$candidateId'
+    | '/candidates/'
+    | '/candidates/$candidateId/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to:
+    | '/'
+    | '/about'
+    | '/candidates/$candidateId'
+    | '/candidates'
+    | '/candidates/$candidateId/edit'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/candidates/$candidateId'
+    | '/candidates/'
+    | '/candidates/$candidateId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CandidatesCandidateIdRoute: typeof CandidatesCandidateIdRouteWithChildren
+  CandidatesIndexRoute: typeof CandidatesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +111,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/candidates/': {
+      id: '/candidates/'
+      path: '/candidates'
+      fullPath: '/candidates/'
+      preLoaderRoute: typeof CandidatesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/candidates/$candidateId': {
+      id: '/candidates/$candidateId'
+      path: '/candidates/$candidateId'
+      fullPath: '/candidates/$candidateId'
+      preLoaderRoute: typeof CandidatesCandidateIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/candidates/$candidateId/edit': {
+      id: '/candidates/$candidateId/edit'
+      path: '/edit'
+      fullPath: '/candidates/$candidateId/edit'
+      preLoaderRoute: typeof CandidatesCandidateIdEditRouteImport
+      parentRoute: typeof CandidatesCandidateIdRoute
+    }
   }
 }
+
+interface CandidatesCandidateIdRouteChildren {
+  CandidatesCandidateIdEditRoute: typeof CandidatesCandidateIdEditRoute
+}
+
+const CandidatesCandidateIdRouteChildren: CandidatesCandidateIdRouteChildren = {
+  CandidatesCandidateIdEditRoute: CandidatesCandidateIdEditRoute,
+}
+
+const CandidatesCandidateIdRouteWithChildren =
+  CandidatesCandidateIdRoute._addFileChildren(
+    CandidatesCandidateIdRouteChildren,
+  )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CandidatesCandidateIdRoute: CandidatesCandidateIdRouteWithChildren,
+  CandidatesIndexRoute: CandidatesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
