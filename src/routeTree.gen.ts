@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DemoIndexRouteImport } from './routes/demo/index'
 import { Route as CandidatesIndexRouteImport } from './routes/candidates/index'
+import { Route as FormCandidateIdRouteImport } from './routes/form/$candidateId'
 import { Route as CandidatesCandidateIdRouteImport } from './routes/candidates/$candidateId'
 import { Route as CandidatesCandidateIdEditRouteImport } from './routes/candidates.$candidateId.edit'
 
@@ -25,9 +27,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DemoIndexRoute = DemoIndexRouteImport.update({
+  id: '/demo/',
+  path: '/demo/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CandidatesIndexRoute = CandidatesIndexRouteImport.update({
   id: '/candidates/',
   path: '/candidates/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FormCandidateIdRoute = FormCandidateIdRouteImport.update({
+  id: '/form/$candidateId',
+  path: '/form/$candidateId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CandidatesCandidateIdRoute = CandidatesCandidateIdRouteImport.update({
@@ -46,14 +58,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
+  '/form/$candidateId': typeof FormCandidateIdRoute
   '/candidates/': typeof CandidatesIndexRoute
+  '/demo/': typeof DemoIndexRoute
   '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
+  '/form/$candidateId': typeof FormCandidateIdRoute
   '/candidates': typeof CandidatesIndexRoute
+  '/demo': typeof DemoIndexRoute
   '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
 }
 export interface FileRoutesById {
@@ -61,7 +77,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
+  '/form/$candidateId': typeof FormCandidateIdRoute
   '/candidates/': typeof CandidatesIndexRoute
+  '/demo/': typeof DemoIndexRoute
   '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
 }
 export interface FileRouteTypes {
@@ -70,21 +88,27 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/candidates/$candidateId'
+    | '/form/$candidateId'
     | '/candidates/'
+    | '/demo/'
     | '/candidates/$candidateId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/candidates/$candidateId'
+    | '/form/$candidateId'
     | '/candidates'
+    | '/demo'
     | '/candidates/$candidateId/edit'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/candidates/$candidateId'
+    | '/form/$candidateId'
     | '/candidates/'
+    | '/demo/'
     | '/candidates/$candidateId/edit'
   fileRoutesById: FileRoutesById
 }
@@ -92,7 +116,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   CandidatesCandidateIdRoute: typeof CandidatesCandidateIdRouteWithChildren
+  FormCandidateIdRoute: typeof FormCandidateIdRoute
   CandidatesIndexRoute: typeof CandidatesIndexRoute
+  DemoIndexRoute: typeof DemoIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -111,11 +137,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/demo/': {
+      id: '/demo/'
+      path: '/demo'
+      fullPath: '/demo/'
+      preLoaderRoute: typeof DemoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/candidates/': {
       id: '/candidates/'
       path: '/candidates'
       fullPath: '/candidates/'
       preLoaderRoute: typeof CandidatesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/form/$candidateId': {
+      id: '/form/$candidateId'
+      path: '/form/$candidateId'
+      fullPath: '/form/$candidateId'
+      preLoaderRoute: typeof FormCandidateIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/candidates/$candidateId': {
@@ -152,7 +192,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   CandidatesCandidateIdRoute: CandidatesCandidateIdRouteWithChildren,
+  FormCandidateIdRoute: FormCandidateIdRoute,
   CandidatesIndexRoute: CandidatesIndexRoute,
+  DemoIndexRoute: DemoIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

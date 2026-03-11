@@ -2,6 +2,7 @@ import type { CandidateType } from '#/types/candidate';
 
 const candidates: CandidateType[] = [
   {
+    id: '1',
     age: 26,
     experience: 3,
     name: 'Enmanuel',
@@ -10,6 +11,7 @@ const candidates: CandidateType[] = [
     working: true,
   },
   {
+    id: '2',
     age: 30,
     experience: 5,
     name: 'Jane Doe',
@@ -40,7 +42,7 @@ export const getCandidates = async (status?: CandidateType['status']) => {
 export const getCandidateById = async (id: number) => {
   // await sleep();
 
-  const candidate = candidates[id];
+  const candidate = candidates.find((c) => c.id === String(id));
 
   if (!candidate) {
     throw new Error('Candidate not found - invalid ID');

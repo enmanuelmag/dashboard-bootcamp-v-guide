@@ -3,8 +3,10 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
 
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 
 import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 
 const router = createRouter({
   routeTree,
@@ -24,6 +26,7 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <MantineProvider>
+      <Notifications position="top-right" />
       <RouterProvider router={router} />
     </MantineProvider>,
   );
