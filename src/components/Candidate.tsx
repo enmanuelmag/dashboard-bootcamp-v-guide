@@ -1,6 +1,5 @@
 import type { CandidateType } from '#/types/candidate';
 import { Button, Paper, Text, Title } from '@mantine/core';
-import { useState } from 'react';
 
 type CandidateProps = {
   data: CandidateType;
@@ -18,7 +17,6 @@ const Candidate = (props: CandidateProps) => {
       <Text>Skills: {data.skills.join(', ')}</Text>
       <Text>Currently Working: {data.working ? 'Yes' : 'No'}</Text>
 
-      {/* <button onClick={() => copyInfo(data)}>Copy Info</button> */}
       <Button fullWidth mt={12} onClick={() => copyInfo(data)}>
         Copy Info
       </Button>

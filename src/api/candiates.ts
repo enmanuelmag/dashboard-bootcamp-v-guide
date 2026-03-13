@@ -25,12 +25,12 @@ const sleep = async () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(true);
-    }, 5000);
+    }, 3000);
   });
 };
 
 export const getCandidates = async (status?: CandidateType['status']) => {
-  // await sleep();
+  await sleep();
 
   const filtered = status
     ? candidates.filter((c) => c.status === status)

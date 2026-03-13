@@ -67,11 +67,18 @@ export default function Header() {
             Form
           </Link>
           <Link
-            to="/demo"
+            to="/demo/class-func"
             className="nav-link"
             activeProps={{ className: 'nav-link is-active' }}
           >
-            Demo
+            Class vs Func
+          </Link>
+          <Link
+            to="/demo/query-flow"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            Query Flow
           </Link>
           <Link
             to="/about"

@@ -11,8 +11,12 @@ class LocalStorageDS extends DataDS {
     return JSON.parse(candidatesRaw) as CandidateType[];
   }
 
-  async getCandidates(status?: string) {
+  async getCandidates(status?: string | null) {
     try {
+      console.log(
+        'Loading candidates from LocalStorageDS with status:',
+        status,
+      );
       // Simular latencia de red
       await sleep();
 

@@ -3,7 +3,7 @@ import { FunctionalComponent } from '#/components/demo/func-comp';
 import { Box, Divider, Title } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/demo/')({
+export const Route = createFileRoute('/demo/class-func')({
   component: RouteComponent,
 });
 

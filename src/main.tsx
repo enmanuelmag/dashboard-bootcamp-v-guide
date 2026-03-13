@@ -8,10 +8,17 @@ import '@mantine/notifications/styles.css';
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 
+import { DevTools, Provider, queryClient } from '@/integrations/query/provider';
+
+export const getContext = () => ({
+  queryClient,
+});
+
 const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
   scrollRestoration: true,
+  context: getContext(),
 });
 
 declare module '@tanstack/react-router' {
@@ -25,9 +32,12 @@ const rootElement = document.getElementById('app')!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
-    <MantineProvider>
-      <Notifications position="top-right" />
-      <RouterProvider router={router} />
-    </MantineProvider>,
+    <Provider>
+      <MantineProvider>
+        <DevTools />
+        <Notifications position="top-right" />
+        <RouterProvider router={router} />
+      </MantineProvider>
+    </Provider>,
   );
 }
