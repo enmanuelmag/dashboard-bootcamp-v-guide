@@ -12,3 +12,14 @@ export const useCandidatesQuery = (status?: string | null) => {
 
   return candidatesQuery;
 };
+
+export const useCandidateByIdQuery = (id: string) => {
+  const candidateQuery = useQuery({
+    queryKey: QKeys.GET_CANDIDATE_BY_ID(id),
+    queryFn: () => {
+      return DataRepo.getCandidateById(id);
+    },
+  });
+
+  return candidateQuery;
+};
