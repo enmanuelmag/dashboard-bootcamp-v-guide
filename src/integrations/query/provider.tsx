@@ -12,7 +12,10 @@ export const queryClient = new QueryClient({
       networkMode: 'online',
       placeholderData: keepPreviousData,
       staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 10, // 10 minutes
+      gcTime: 1000 * 60 * 10, // 10 minutes,
+      // options
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
     },
     mutations: {
       networkMode: 'online',

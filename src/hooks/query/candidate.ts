@@ -15,7 +15,7 @@ export const useCandidatesQuery = (status?: string | null) => {
 
 export const useCandidateByIdQuery = (id: string) => {
   const candidateQuery = useQuery({
-    queryKey: QKeys.GET_CANDIDATE_BY_ID(id),
+    queryKey: QKeys.GET_CANDIDATE_BY_ID(id), // -> ['candidates', id]
     queryFn: () => {
       return DataRepo.getCandidateById(id);
     },

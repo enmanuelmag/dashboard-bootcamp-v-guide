@@ -13,7 +13,10 @@ import {
   Title,
 } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useSaveCandidateMutation } from '#/hooks/mutation/candidate';
+import { isLoadingMutation } from '#/utils/queyr';
+import { useCandidateByIdQuery } from '#/hooks/query/candidate';
 
 export const Route = createFileRoute('/form/$candidateId')({
   component: RouteComponent,
@@ -22,7 +25,11 @@ export const Route = createFileRoute('/form/$candidateId')({
 function RouteComponent() {
   const { candidateId } = Route.useParams();
 
+  console.log('candidateId from params:', candidateId);
+
   const mode = candidateId === 'new' ? 'Creating' : 'Editing';
+
+  const candidateByIdQuery = useCandidateByIdQuery(candidateId);
 
   const [form, setForm] = useState<FormCandidateType>({
     name: '',
@@ -32,6 +39,16 @@ function RouteComponent() {
     status: 'Pending',
     working: false,
   });
+
+  const saveCandidateMutation = useSaveCandidateMutation();
+
+  const isLoading = isLoadingMutation(saveCandidateMutation);
+
+  React.useEffect(() => {
+    if (candidateByIdQuery.isSuccess && candidateByIdQuery.data) {
+      setForm(candidateByIdQuery.data);
+    }
+  }, [candidateByIdQuery.isSuccess, candidateByIdQuery.data]);
 
   return (
     <Container pt="md" pb="xl">
@@ -130,7 +147,7 @@ function RouteComponent() {
           />
         </Fieldset>
 
-        <Button type="submit" mt="md">
+        <Button type="submit" mt="md" loading={isLoading}>
           Submit
         </Button>
       </form>
@@ -140,20 +157,22 @@ function RouteComponent() {
   function handleSubmit() {
     console.log('Submitting form with data:', form);
 
-    DataRepo.saveCandidate(form)
-      .then(() => {
-        notifications.show({
-          color: 'green',
-          title: 'Éxito',
-          message: 'Candidato guardado',
-        });
-      })
-      .catch(() => {
-        notifications.show({
-          color: 'red',
-          title: 'Error',
-          message: 'No se pudo guardar el candidato',
-        });
-      });
+    saveCandidateMutation.mutate(form);
+
+    // DataRepo.saveCandidate(form)
+    //   .then(() => {
+    //     notifications.show({
+    //       color: 'green',
+    //       title: 'Éxito',
+    //       message: 'Candidato guardado',
+    //     });
+    //   })
+    //   .catch(() => {
+    //     notifications.show({
+    //       color: 'red',
+    //       title: 'Error',
+    //       message: 'No se pudo guardar el candidato',
+    //     });
+    //   });
   }
 }
