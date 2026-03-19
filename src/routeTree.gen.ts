@@ -13,7 +13,12 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CandidatesIndexRouteImport } from './routes/candidates/index'
 import { Route as FormCandidateIdRouteImport } from './routes/form/$candidateId'
+import { Route as DemoUseMemoRouteImport } from './routes/demo/use-memo'
+import { Route as DemoUseCallbackRouteImport } from './routes/demo/use-callback'
 import { Route as DemoQueryFlowRouteImport } from './routes/demo/query-flow'
+import { Route as DemoMemoHocRouteImport } from './routes/demo/memo-hoc'
+import { Route as DemoLifecycleRouteImport } from './routes/demo/lifecycle'
+import { Route as DemoLayoutEffectRouteImport } from './routes/demo/layout-effect'
 import { Route as DemoClassFuncRouteImport } from './routes/demo/class-func'
 import { Route as CandidatesCandidateIdRouteImport } from './routes/candidates/$candidateId'
 import { Route as CandidatesCandidateIdEditRouteImport } from './routes/candidates.$candidateId.edit'
@@ -38,9 +43,34 @@ const FormCandidateIdRoute = FormCandidateIdRouteImport.update({
   path: '/form/$candidateId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DemoUseMemoRoute = DemoUseMemoRouteImport.update({
+  id: '/demo/use-memo',
+  path: '/demo/use-memo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoUseCallbackRoute = DemoUseCallbackRouteImport.update({
+  id: '/demo/use-callback',
+  path: '/demo/use-callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DemoQueryFlowRoute = DemoQueryFlowRouteImport.update({
   id: '/demo/query-flow',
   path: '/demo/query-flow',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoMemoHocRoute = DemoMemoHocRouteImport.update({
+  id: '/demo/memo-hoc',
+  path: '/demo/memo-hoc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoLifecycleRoute = DemoLifecycleRouteImport.update({
+  id: '/demo/lifecycle',
+  path: '/demo/lifecycle',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoLayoutEffectRoute = DemoLayoutEffectRouteImport.update({
+  id: '/demo/layout-effect',
+  path: '/demo/layout-effect',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoClassFuncRoute = DemoClassFuncRouteImport.update({
@@ -65,7 +95,12 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
   '/demo/class-func': typeof DemoClassFuncRoute
+  '/demo/layout-effect': typeof DemoLayoutEffectRoute
+  '/demo/lifecycle': typeof DemoLifecycleRoute
+  '/demo/memo-hoc': typeof DemoMemoHocRoute
   '/demo/query-flow': typeof DemoQueryFlowRoute
+  '/demo/use-callback': typeof DemoUseCallbackRoute
+  '/demo/use-memo': typeof DemoUseMemoRoute
   '/form/$candidateId': typeof FormCandidateIdRoute
   '/candidates/': typeof CandidatesIndexRoute
   '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
@@ -75,7 +110,12 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
   '/demo/class-func': typeof DemoClassFuncRoute
+  '/demo/layout-effect': typeof DemoLayoutEffectRoute
+  '/demo/lifecycle': typeof DemoLifecycleRoute
+  '/demo/memo-hoc': typeof DemoMemoHocRoute
   '/demo/query-flow': typeof DemoQueryFlowRoute
+  '/demo/use-callback': typeof DemoUseCallbackRoute
+  '/demo/use-memo': typeof DemoUseMemoRoute
   '/form/$candidateId': typeof FormCandidateIdRoute
   '/candidates': typeof CandidatesIndexRoute
   '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
@@ -86,7 +126,12 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
   '/demo/class-func': typeof DemoClassFuncRoute
+  '/demo/layout-effect': typeof DemoLayoutEffectRoute
+  '/demo/lifecycle': typeof DemoLifecycleRoute
+  '/demo/memo-hoc': typeof DemoMemoHocRoute
   '/demo/query-flow': typeof DemoQueryFlowRoute
+  '/demo/use-callback': typeof DemoUseCallbackRoute
+  '/demo/use-memo': typeof DemoUseMemoRoute
   '/form/$candidateId': typeof FormCandidateIdRoute
   '/candidates/': typeof CandidatesIndexRoute
   '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
@@ -98,7 +143,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/candidates/$candidateId'
     | '/demo/class-func'
+    | '/demo/layout-effect'
+    | '/demo/lifecycle'
+    | '/demo/memo-hoc'
     | '/demo/query-flow'
+    | '/demo/use-callback'
+    | '/demo/use-memo'
     | '/form/$candidateId'
     | '/candidates/'
     | '/candidates/$candidateId/edit'
@@ -108,7 +158,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/candidates/$candidateId'
     | '/demo/class-func'
+    | '/demo/layout-effect'
+    | '/demo/lifecycle'
+    | '/demo/memo-hoc'
     | '/demo/query-flow'
+    | '/demo/use-callback'
+    | '/demo/use-memo'
     | '/form/$candidateId'
     | '/candidates'
     | '/candidates/$candidateId/edit'
@@ -118,7 +173,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/candidates/$candidateId'
     | '/demo/class-func'
+    | '/demo/layout-effect'
+    | '/demo/lifecycle'
+    | '/demo/memo-hoc'
     | '/demo/query-flow'
+    | '/demo/use-callback'
+    | '/demo/use-memo'
     | '/form/$candidateId'
     | '/candidates/'
     | '/candidates/$candidateId/edit'
@@ -129,7 +189,12 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CandidatesCandidateIdRoute: typeof CandidatesCandidateIdRouteWithChildren
   DemoClassFuncRoute: typeof DemoClassFuncRoute
+  DemoLayoutEffectRoute: typeof DemoLayoutEffectRoute
+  DemoLifecycleRoute: typeof DemoLifecycleRoute
+  DemoMemoHocRoute: typeof DemoMemoHocRoute
   DemoQueryFlowRoute: typeof DemoQueryFlowRoute
+  DemoUseCallbackRoute: typeof DemoUseCallbackRoute
+  DemoUseMemoRoute: typeof DemoUseMemoRoute
   FormCandidateIdRoute: typeof FormCandidateIdRoute
   CandidatesIndexRoute: typeof CandidatesIndexRoute
 }
@@ -164,11 +229,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FormCandidateIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/demo/use-memo': {
+      id: '/demo/use-memo'
+      path: '/demo/use-memo'
+      fullPath: '/demo/use-memo'
+      preLoaderRoute: typeof DemoUseMemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/use-callback': {
+      id: '/demo/use-callback'
+      path: '/demo/use-callback'
+      fullPath: '/demo/use-callback'
+      preLoaderRoute: typeof DemoUseCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/demo/query-flow': {
       id: '/demo/query-flow'
       path: '/demo/query-flow'
       fullPath: '/demo/query-flow'
       preLoaderRoute: typeof DemoQueryFlowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/memo-hoc': {
+      id: '/demo/memo-hoc'
+      path: '/demo/memo-hoc'
+      fullPath: '/demo/memo-hoc'
+      preLoaderRoute: typeof DemoMemoHocRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/lifecycle': {
+      id: '/demo/lifecycle'
+      path: '/demo/lifecycle'
+      fullPath: '/demo/lifecycle'
+      preLoaderRoute: typeof DemoLifecycleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/layout-effect': {
+      id: '/demo/layout-effect'
+      path: '/demo/layout-effect'
+      fullPath: '/demo/layout-effect'
+      preLoaderRoute: typeof DemoLayoutEffectRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/class-func': {
@@ -213,7 +313,12 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CandidatesCandidateIdRoute: CandidatesCandidateIdRouteWithChildren,
   DemoClassFuncRoute: DemoClassFuncRoute,
+  DemoLayoutEffectRoute: DemoLayoutEffectRoute,
+  DemoLifecycleRoute: DemoLifecycleRoute,
+  DemoMemoHocRoute: DemoMemoHocRoute,
   DemoQueryFlowRoute: DemoQueryFlowRoute,
+  DemoUseCallbackRoute: DemoUseCallbackRoute,
+  DemoUseMemoRoute: DemoUseMemoRoute,
   FormCandidateIdRoute: FormCandidateIdRoute,
   CandidatesIndexRoute: CandidatesIndexRoute,
 }

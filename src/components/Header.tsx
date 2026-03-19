@@ -81,6 +81,41 @@ export default function Header() {
             Query Flow
           </Link>
           <Link
+            to="/demo/lifecycle"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            Lifecycle
+          </Link>
+          <Link
+            to="/demo/layout-effect"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            Layout Effect
+          </Link>
+          <Link
+            to="/demo/memo-hoc"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            Memo & HOC
+          </Link>
+          <Link
+            to="/demo/use-callback"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            useCallback
+          </Link>
+          <Link
+            to="/demo/use-memo"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            useMemo
+          </Link>
+          <Link
             to="/about"
             className="nav-link"
             activeProps={{ className: 'nav-link is-active' }}
