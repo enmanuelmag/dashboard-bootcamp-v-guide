@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo } from 'react';
+import React, { useState, useEffect, useRef, memo, useMemo } from 'react';
 import {
   Box,
   TextInput,
@@ -23,7 +23,15 @@ type WeatherData = {
 
 // Simulates an external library component - cannot be modified
 // This component simulates an API call on mount
-function WeatherWidget({ city, unit }: { city: string; unit: 'C' | 'F' }) {
+function WeatherWidget({
+  city,
+  unit,
+  obj,
+}: {
+  city: string;
+  unit: 'C' | 'F';
+  obj: { city: string | null; unit: 'C' | 'F'; nombre: string };
+}) {
   const renderCountRef = useRef(0);
   renderCountRef.current += 1;
 
@@ -48,9 +56,9 @@ function WeatherWidget({ city, unit }: { city: string; unit: 'C' | 'F' }) {
     }, 800);
 
     return () => clearTimeout(timer);
-  }, [city, unit]);
+  }, [city]);
 
-  console.log('[WeatherWidget] Renderizado - Props:', { city, unit });
+  console.log('[WeatherWidget] Renderizado - Props:', { city, unit, obj });
 
   return (
     <Card withBorder p="md">
@@ -86,7 +94,7 @@ function WeatherWidget({ city, unit }: { city: string; unit: 'C' | 'F' }) {
 }
 
 // Versión memoizada - evita re-obtener cuando props no relacionados cambian
-const MemoizedWeatherWidget = memo(WeatherWidget);
+const MemoizedWeatherWidget = React.memo(WeatherWidget);
 
 export function MemoHocDemo() {
   const [searchText, setSearchText] = useState('');
@@ -104,6 +112,12 @@ export function MemoHocDemo() {
     { value: 'Bilbao', label: 'Bilbao' },
     { value: 'Sevilla', label: 'Sevilla' },
   ];
+
+  const objectMemo = useMemo(() => {
+    return { city, unit, nombre: 'Enmanuel' };
+  }, []);
+
+  // const objNoMemo = { city, unit, nombre: 'Enmanuel' };
 
   return (
     <Box p="md">
@@ -224,7 +238,9 @@ export function MemoHocDemo() {
               <Text fw={500} mb="md">
                 {memoEnabled ? 'Con React.memo ✅' : 'Sin React.memo ❌'}
               </Text>
-              {city && <WidgetComponent city={city} unit={unit} />}
+              {city && (
+                <WidgetComponent city={city} unit={unit} obj={objectMemo} />
+              )}
               {!city && <Text c="dimmed">Selecciona una ciudad</Text>}
             </Box>
           </Grid.Col>

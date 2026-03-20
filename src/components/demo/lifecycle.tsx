@@ -37,6 +37,16 @@ function TimerComponent() {
     };
   }, []);
 
+  useEffect(() => {
+    console.log('[TimerComponent] Montado - Iniciando intervalo');
+
+    window.addEventListener('click', handleClick);
+
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
+  }, []);
+
   return (
     <Paper p="md" withBorder>
       <Text fw={500}>Componente Temporizador (Montado)</Text>
@@ -47,6 +57,10 @@ function TimerComponent() {
       <Text size="sm">Segundos: {time}</Text>
     </Paper>
   );
+
+  function handleClick() {
+    console.log('[TimerComponent] Click detectado');
+  }
 }
 
 export function LifecycleDemo() {
@@ -119,7 +133,12 @@ export function LifecycleDemo() {
               <Text fw={500} mb="xs">
                 Counter: {counter}
               </Text>
-              <Button onClick={() => setCounter((c) => c + 1)} fullWidth>
+              <Button
+                onClick={() => {
+                  setCounter((c) => c + 1);
+                }}
+                fullWidth
+              >
                 Incrementar Contador
               </Button>
             </div>

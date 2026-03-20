@@ -14,38 +14,37 @@ import {
 } from '@mantine/core';
 
 // Child component wrapped in React.memo
-const ChildButton = memo(
-  ({
-    onClick,
-    useCallbackEnabled,
-  }: {
-    onClick: () => void;
-    useCallbackEnabled: boolean;
-  }) => {
-    const renderCountRef = useRef(0);
-    renderCountRef.current += 1;
+type Props = {
+  onClick: () => void;
+  useCallbackEnabled: boolean;
+};
 
-    console.log(
-      `[ChildButton] Render #${renderCountRef.current} ${useCallbackEnabled ? '(useCallback ENCENDIDO)' : '(useCallback APAGADO)'}`,
-    );
+const ChildButtonInicial = ({ onClick, useCallbackEnabled }: Props) => {
+  const renderCountRef = useRef(0);
+  renderCountRef.current += 1;
 
-    return (
-      <Paper p="md" withBorder>
-        <Group>
-          <Button onClick={onClick} variant="light">
-            Hazme clic
-          </Button>
-          <Badge color={renderCountRef.current > 1 ? 'red' : 'green'}>
-            Renderizados: {renderCountRef.current}
-          </Badge>
-        </Group>
-        <Text size="xs" c="dimmed" mt="xs">
-          Revisa la consola para ver cuándo este componente se re-renderiza
-        </Text>
-      </Paper>
-    );
-  },
-);
+  console.log(
+    `[ChildButton] Render #${renderCountRef.current} ${useCallbackEnabled ? '(useCallback ENCENDIDO)' : '(useCallback APAGADO)'}`,
+  );
+
+  return (
+    <Paper p="md" withBorder>
+      <Group>
+        <Button onClick={onClick} variant="light">
+          Hazme clic
+        </Button>
+        <Badge color={renderCountRef.current > 1 ? 'red' : 'green'}>
+          Renderizados: {renderCountRef.current}
+        </Badge>
+      </Group>
+      <Text size="xs" c="dimmed" mt="xs">
+        Revisa la consola para ver cuándo este componente se re-renderiza
+      </Text>
+    </Paper>
+  );
+};
+
+const ChildButton = memo(ChildButtonInicial);
 
 ChildButton.displayName = 'ChildButton';
 
@@ -54,15 +53,13 @@ export function UseCallbackDemo() {
   const [otherState, setOtherState] = useState(0);
   const [useCallbackEnabled, setUseCallbackEnabled] = useState(true);
 
-  // Con useCallback - solo cambia cuando 'count' cambia
-  const handleClickWithCallback = useCallback(() => {
-    setCount((c) => c + 1);
-  }, []);
-
   // Sin useCallback - recreada en cada render
   const handleClickWithoutCallback = () => {
     setCount((c) => c + 1);
   };
+
+  // Con useCallback - solo cambia cuando 'count' cambia
+  const handleClickWithCallback = useCallback(handleClickWithoutCallback, []);
 
   const handleClick = useCallbackEnabled
     ? handleClickWithCallback

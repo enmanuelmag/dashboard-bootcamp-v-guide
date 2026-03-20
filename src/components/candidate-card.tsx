@@ -1,5 +1,5 @@
 import type { CandidateType } from '#/types/candidate';
-import { Badge, Button, Flex, Paper, Text, Title } from '@mantine/core';
+import { Badge, Button, Flex, Paper, Title } from '@mantine/core';
 import { Link } from '@tanstack/react-router';
 
 type CandidateProps = {
