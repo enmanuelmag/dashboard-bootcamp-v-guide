@@ -19,6 +19,7 @@ export const useCandidateByIdQuery = (id: string) => {
     queryFn: () => {
       return DataRepo.getCandidateById(id);
     },
+    enabled: !!id && id !== 'new',
   });
 
   return candidateQuery;

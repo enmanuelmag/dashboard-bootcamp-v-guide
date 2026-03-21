@@ -1,6 +1,6 @@
 import DataRepo from '#/api/datasource';
 import { queryClient } from '#/integrations/query/provider';
-import type { FormCandidateType } from '#/types/candidate';
+import type { FormCandidateType, UpdateCandidateType } from '#/types/candidate';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
@@ -51,4 +51,44 @@ export const useSaveCandidateMutation = () => {
   });
 
   return saveCandidateMutation;
+};
+
+export const useUpdateCandidateMutation = () => {
+  const navigate = useNavigate();
+
+  const updateCandidateMutation = useMutation({
+    mutationFn: async (data: UpdateCandidateType) => {
+      return await DataRepo.updateCandidate(data);
+    },
+    onSuccess: (candidateId) => {
+      notifications.show({
+        color: 'green',
+        title: 'Éxito',
+        message: 'Candidato actualizado',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['candidates'],
+        refetchType: 'all',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['candidates', candidateId],
+        refetchType: 'all',
+      });
+
+      navigate({
+        to: '/candidates',
+      });
+    },
+    onError: () => {
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'Error al actualizar candidato',
+      });
+    },
+  });
+
+  return updateCandidateMutation;
 };

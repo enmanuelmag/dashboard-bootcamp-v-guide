@@ -1,7 +1,11 @@
-import type { CandidateType, FormCandidateType } from '#/types/candidate';
+import type {
+  CandidateType,
+  FormCandidateType,
+  UpdateCandidateType,
+} from '#/types/candidate';
 import DataDS from './data-ds';
 
-const CANDIDATES_KEY = 'candidates';
+const CANDIDATES_KEY = 'candidates-v1';
 
 const sleep = (ms = 1000) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -71,6 +75,30 @@ class LocalStorageDS extends DataDS {
       localStorage.setItem(CANDIDATES_KEY, JSON.stringify(candidates));
 
       return true;
+    } catch (error) {
+      console.error('Error saving candidate:', error);
+      throw new Error('Error al guardar candidato');
+    }
+  }
+
+  async updateCandidate(candidate: UpdateCandidateType) {
+    try {
+      // Simular latencia de red
+      await sleep();
+
+      const candidates = this.getData();
+
+      const updatedCandidates = candidates.map((c) => {
+        if (c.id === candidate.id) {
+          return candidate;
+        } else {
+          return c;
+        }
+      });
+
+      localStorage.setItem(CANDIDATES_KEY, JSON.stringify(updatedCandidates));
+
+      return candidate.id;
     } catch (error) {
       console.error('Error saving candidate:', error);
       throw new Error('Error al guardar candidato');

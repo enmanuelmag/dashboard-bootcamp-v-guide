@@ -1,8 +1,5 @@
-import DataRepo from '#/api/datasource';
-import type { FormCandidateType } from '#/types/candidate';
-import { notifications } from '@mantine/notifications';
+import { FormCandidateSchema, type FormCandidateType } from '#/types/candidate';
 import {
-  Button,
   Checkbox,
   Container,
   Divider,
@@ -13,40 +10,67 @@ import {
   Title,
 } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
-import React, { useState } from 'react';
-import { useSaveCandidateMutation } from '#/hooks/mutation/candidate';
+import React from 'react';
+import {
+  useSaveCandidateMutation,
+  useUpdateCandidateMutation,
+} from '#/hooks/mutation/candidate';
 import { isLoadingMutation } from '#/utils/queyr';
 import { useCandidateByIdQuery } from '#/hooks/query/candidate';
+import { useAppForm } from '#/hooks/form/app.form';
 
 export const Route = createFileRoute('/form/$candidateId')({
   component: RouteComponent,
 });
 
+const defaultValues: FormCandidateType = {
+  name: '',
+  age: 18,
+  experience: 1,
+  skills: [],
+  status: 'Pending',
+  working: false,
+};
+
 function RouteComponent() {
   const { candidateId } = Route.useParams();
-
-  console.log('candidateId from params:', candidateId);
 
   const mode = candidateId === 'new' ? 'Creating' : 'Editing';
 
   const candidateByIdQuery = useCandidateByIdQuery(candidateId);
 
-  const [form, setForm] = useState<FormCandidateType>({
-    name: '',
-    age: 18,
-    experience: 0,
-    skills: [],
-    status: 'Pending',
-    working: false,
-  });
-
   const saveCandidateMutation = useSaveCandidateMutation();
 
-  const isLoading = isLoadingMutation(saveCandidateMutation);
+  const updateCandidateMutation = useUpdateCandidateMutation();
+
+  const form = useAppForm({
+    defaultValues,
+    validators: {
+      onSubmit: FormCandidateSchema,
+    },
+    onSubmit: (param) => {
+      if (mode === 'Creating') {
+        saveCandidateMutation.mutate(param.value);
+      } else {
+        updateCandidateMutation.mutate({
+          ...param.value,
+          id: candidateId,
+        });
+      }
+    },
+    onSubmitInvalid: (param) => {
+      console.log('Errores', param.formApi.getAllErrors(), param.value);
+    },
+  });
+
+  const isLoading = isLoadingMutation(
+    saveCandidateMutation,
+    updateCandidateMutation,
+  );
 
   React.useEffect(() => {
     if (candidateByIdQuery.isSuccess && candidateByIdQuery.data) {
-      setForm(candidateByIdQuery.data);
+      form.reset(candidateByIdQuery.data);
     }
   }, [candidateByIdQuery.isSuccess, candidateByIdQuery.data]);
 
@@ -59,120 +83,117 @@ function RouteComponent() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit();
+          form.handleSubmit();
         }}
       >
         <Fieldset legend="Personal Information">
-          <TextInput
-            label="Name"
-            placeholder="Type the name"
-            value={form?.name || ''}
-            onChange={(e) => {
-              setForm((prev) => ({
-                ...prev,
-                name: e.currentTarget.value,
-              }));
-            }}
+          <form.AppField
+            name="name"
+            children={(field) => (
+              <field.TextInput
+                label="Name"
+                error={field.state.meta.errors[0]?.message}
+                placeholder="Type the name"
+                value={field.state.value}
+                onChange={(e) => {
+                  field.handleChange(e.currentTarget.value);
+                }}
+              />
+            )}
           />
 
-          <NumberInput
-            label="Age"
-            placeholder="Type the age"
-            min={18}
-            value={form?.age || 0}
-            onChange={(value) => {
-              setForm((prev) => ({
-                ...prev,
-                age: Number(value),
-              }));
-            }}
+          <form.AppField
+            name="age"
+            children={(field) => (
+              <NumberInput
+                label="Age"
+                placeholder="Type the age"
+                error={field.state.meta.errors[0]?.message}
+                min={18}
+                value={field.state.value}
+                onChange={(value) => {
+                  field.handleChange(Number(value));
+                }}
+              />
+            )}
           />
         </Fieldset>
 
         <Fieldset legend="Professional Information" mt="md">
-          <NumberInput
-            label="Experience"
-            placeholder="Type the experience in years"
-            value={form?.experience || 0}
-            onChange={(value) => {
-              setForm((prev) => ({
-                ...prev,
-                experience: Number(value),
-              }));
-            }}
+          <form.AppField
+            name="experience"
+            children={(field) => (
+              <NumberInput
+                label="Experience (years)"
+                placeholder="Type the years of experience"
+                error={field.state.meta.errors[0]?.message}
+                min={0}
+                value={field.state.value}
+                onChange={(value) => {
+                  field.handleChange(Number(value));
+                }}
+              />
+            )}
           />
 
-          <Select
-            label="Status"
-            placeholder="Select the status"
-            clearable={false}
-            allowDeselect={false}
-            data={['Pending', 'Reviewing', 'Interviewing', 'Hired']}
-            onChange={(value) => {
-              if (!value) return;
+          <form.AppField
+            name="status"
+            children={(field) => (
+              <Select
+                label="Status"
+                placeholder="Select the status"
+                clearable={false}
+                error={field.state.meta.errors[0]?.message}
+                allowDeselect={false}
+                data={['Pending', 'Reviewing', 'Interviewing', 'Hired']}
+                onChange={(value) => {
+                  if (!value) return;
 
-              setForm((prev) => ({
-                ...prev,
-                status: value as FormCandidateType['status'],
-              }));
-            }}
+                  field.handleChange(value as FormCandidateType['status']);
+                }}
+              />
+            )}
           />
 
-          <TextInput
-            label="Skills"
-            placeholder="Type the skills separated by commas"
-            value={form?.skills?.join(', ') || ''}
-            onChange={(e) => {
-              const skills = e.currentTarget.value
-                .split(',')
-                .map((s) => s.trim());
+          <form.AppField
+            name="skills"
+            children={(field) => (
+              <TextInput
+                label="Skills"
+                placeholder="Type the skills separated by commas"
+                error={field.state.meta.errors[0]?.message}
+                value={field.state.value.join(', ')}
+                onChange={(e) => {
+                  const skills = e.currentTarget.value
+                    .split(',')
+                    .map((s) => s.trim());
 
-              setForm((prev) => ({
-                ...prev,
-                skills,
-              }));
-            }}
+                  field.handleChange(skills);
+                }}
+              />
+            )}
           />
 
-          <Checkbox
-            mt="md"
-            label="Currently Working"
-            checked={form?.working || false}
-            onChange={(e) => {
-              setForm((prev) => ({
-                ...prev,
-                working: e.currentTarget.checked,
-              }));
-            }}
+          <form.AppField
+            name="working"
+            children={(field) => (
+              <Checkbox
+                mt="md"
+                error={field.state.meta.errors[0]?.message}
+                label="Currently Working"
+                checked={field.state.value || false}
+                onChange={(e) => {
+                  field.handleChange(e.currentTarget.checked);
+                }}
+              />
+            )}
           />
         </Fieldset>
 
-        <Button type="submit" mt="md" loading={isLoading}>
-          Submit
-        </Button>
+        <form.SubmitButton loading={isLoading}>
+          {mode === 'Creating' ? 'Crear candidato' : 'Actualizar candidato'}
+        </form.SubmitButton>
       </form>
     </Container>
   );
-
-  function handleSubmit() {
-    console.log('Submitting form with data:', form);
-
-    saveCandidateMutation.mutate(form);
-
-    // DataRepo.saveCandidate(form)
-    //   .then(() => {
-    //     notifications.show({
-    //       color: 'green',
-    //       title: 'Éxito',
-    //       message: 'Candidato guardado',
-    //     });
-    //   })
-    //   .catch(() => {
-    //     notifications.show({
-    //       color: 'red',
-    //       title: 'Error',
-    //       message: 'No se pudo guardar el candidato',
-    //     });
-    //   });
-  }
 }
