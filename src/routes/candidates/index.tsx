@@ -1,5 +1,7 @@
 import CandidateCard from '#/components/candidate-card';
 import { useCandidatesQuery } from '#/hooks/query/candidate';
+import { useAppStore } from '#/store';
+import type { Store } from '#/types/store';
 import { isLoadingQuery, isLoadingRefetchQuery } from '#/utils/queyr';
 import {
   Button,
@@ -11,7 +13,6 @@ import {
   Text,
 } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
 
 export const Route = createFileRoute('/candidates/')({
   component: RouteComponent,
@@ -20,7 +21,8 @@ export const Route = createFileRoute('/candidates/')({
 function RouteComponent() {
   // const searchParams = Route.useSearch() as { status?: string };
 
-  const [status, setState] = useState<string | null>(null);
+  const status = useAppStore((state) => state.statusFilter);
+  const setState = useAppStore((state) => state.setStatusFilter);
 
   const candidatesQuery = useCandidatesQuery(status);
 
@@ -32,10 +34,14 @@ function RouteComponent() {
     <Container size="xl" py="lg">
       <Flex direction="column" gap="md">
         <Select
-          data={['Pending', 'Reviewing', 'Interviewing', 'Hired']}
+          data={['Pending', 'Reviewing', 'Interviewing', 'Hired', 'All']}
           label="Select filter"
           onChange={(value) => {
-            setState(value);
+            if (value === 'All') {
+              value = null;
+            }
+
+            setState(value as Store['statusFilter']);
           }}
         />
 
