@@ -10,6 +10,8 @@ import { Notifications } from '@mantine/notifications';
 
 import { DevTools, Provider, queryClient } from '@/integrations/query/provider';
 
+import '@/integrations/firebase';
+
 export const getContext = () => ({
   queryClient,
 });

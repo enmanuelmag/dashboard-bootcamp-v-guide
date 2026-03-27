@@ -1,3 +1,4 @@
+import { useDeleteCandidateMutation } from '#/hooks/mutation/candidate';
 import type { CandidateType } from '#/types/candidate';
 import {
   Badge,
@@ -17,6 +18,8 @@ type CandidateProps = {
 
 const CandidateDetails = (props: CandidateProps) => {
   const { data } = props;
+
+  const deleteCandidate = useDeleteCandidateMutation();
 
   return (
     <Box>
@@ -63,6 +66,16 @@ const CandidateDetails = (props: CandidateProps) => {
           Edit
         </Button>
       </Link>
+
+      <Button
+        color="red"
+        fullWidth
+        loading={deleteCandidate.isPending}
+        mt={12}
+        onClick={() => deleteCandidate.mutate(data.id)}
+      >
+        Delete
+      </Button>
     </Box>
   );
 

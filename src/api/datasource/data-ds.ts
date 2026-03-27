@@ -12,6 +12,8 @@ abstract class DataDS {
   abstract saveCandidate(candidate: FormCandidateType): Promise<boolean>;
 
   abstract updateCandidate(candidate: UpdateCandidateType): Promise<string>;
+
+  abstract deleteCandidate(id: string): Promise<boolean>;
 }
 
 export default DataDS;

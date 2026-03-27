@@ -1,5 +1,5 @@
-import LocalStorageDS from './local-storage-ds';
+import FirestoreDS from './firestore-ds';
 
-const DataRepo = new LocalStorageDS();
+const DataRepo = new FirestoreDS();
 
 export default DataRepo;

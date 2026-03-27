@@ -17,6 +17,7 @@
     "@mantine/hooks": "^8.3.16",
     "@mantine/modals": "^8.3.16",
     "@mantine/notifications": "^8.3.16",
+    "@t3-oss/env-core": "^0.13.11",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "^0.7.0",
     "@tanstack/react-form": "^1.28.5",
@@ -27,10 +28,12 @@
     "@tanstack/router-plugin": "^1.132.0",
     "@tanstack/zod-form-adapter": "^0.42.1",
     "dayjs": "^1.11.19",
+    "firebase": "^12.11.0",
     "lucide-react": "^0.545.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tailwindcss": "^4.1.18",
+    "zod": "^4.3.6",
     "zustand": "^5.0.12"
   },
   "devDependencies": {

@@ -92,3 +92,32 @@ export const useUpdateCandidateMutation = () => {
 
   return updateCandidateMutation;
 };
+
+export const useDeleteCandidateMutation = () => {
+  const navigate = useNavigate();
+
+  const deleteCandidateMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return await DataRepo.deleteCandidate(id);
+    },
+    onSuccess: () => {
+      notifications.show({
+        color: 'green',
+        title: 'Éxito',
+        message: 'Candidato eliminado',
+      });
+      navigate({
+        to: '/candidates',
+      });
+    },
+    onError: () => {
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'Error al eliminar candidato',
+      });
+    },
+  });
+
+  return deleteCandidateMutation;
+};
