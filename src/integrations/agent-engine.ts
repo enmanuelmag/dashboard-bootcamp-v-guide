@@ -7,7 +7,7 @@ import {
 import { OpenAI } from 'openai';
 
 import { PromptBuilder } from './prompt-builder';
-import { env } from 'process';
+import { env } from '#/env';
 
 // Disable OpenAI Agents SDK tracing (not needed in browser context)
 setTracingDisabled(true);
@@ -26,6 +26,8 @@ export class AgentEngine {
     // Configura el cliente de OpenAI con la clave API y permite su uso en el navegador
     const client = new OpenAI({
       apiKey: env.VITE_OPENAI_API_KEY,
+      organization: env.VITE_OPENAI_ORGANIZATION,
+      project: env.VITE_OPENAI_PROJECT_ID,
       dangerouslyAllowBrowser: true,
     });
 
