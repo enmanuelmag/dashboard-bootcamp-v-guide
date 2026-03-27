@@ -28,6 +28,8 @@ export class AgentEngine {
       apiKey: env.VITE_OPENAI_API_KEY,
       organization: env.VITE_OPENAI_ORGANIZATION,
       project: env.VITE_OPENAI_PROJECT_ID,
+      //! IMPORTANTE: Esto es necesario para permitir que el SDK de OpenAI Agents funcione en el navegador
+      //! pero ten cuidado con la seguridad de tu clave API
       dangerouslyAllowBrowser: true,
     });
 

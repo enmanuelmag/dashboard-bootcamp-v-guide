@@ -57,6 +57,8 @@ Respond in the same language the user uses.
       })
       .join('\n');
 
+    console.log('Generated message for agent:\n', candidateList);
+
     return `
 Here is the current list of candidates (${candidates.length} total):
 
