@@ -1,4 +1,5 @@
 import DataRepo from '#/api/datasource';
+import AgentEngine from '#/integrations/agent-engine';
 import { queryClient } from '#/integrations/query/provider';
 import type { FormCandidateType, UpdateCandidateType } from '#/types/candidate';
 import { notifications } from '@mantine/notifications';
@@ -120,4 +121,21 @@ export const useDeleteCandidateMutation = () => {
   });
 
   return deleteCandidateMutation;
+};
+
+export const useSendMessage = () => {
+  return useMutation({
+    mutationFn: async (message: string) => {
+      const response = await AgentEngine.run(message);
+      return response;
+    },
+    onError: (error) => {
+      console.error('Error sending message to agent:', error);
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'Error al enviar mensaje al agente',
+      });
+    },
+  });
 };

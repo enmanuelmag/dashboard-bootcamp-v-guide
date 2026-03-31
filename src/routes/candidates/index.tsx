@@ -1,4 +1,5 @@
 import CandidateCard from '#/components/candidate-card';
+import { useSendMessage } from '#/hooks/mutation/candidate';
 import { useCandidatesQuery } from '#/hooks/query/candidate';
 import { useAppStore } from '#/store';
 import type { Store } from '#/types/store';
@@ -8,23 +9,32 @@ import {
   Center,
   Container,
   Flex,
+  Input,
   Loader,
+  Modal,
   Select,
   Text,
+  Textarea,
+  TextInput,
 } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
+import React from 'react';
 
 export const Route = createFileRoute('/candidates/')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  // const searchParams = Route.useSearch() as { status?: string };
+  const [isChatModal, onClose] = React.useState(false);
+
+  const [message, setMessage] = React.useState('');
 
   const status = useAppStore((state) => state.statusFilter);
   const setState = useAppStore((state) => state.setStatusFilter);
 
   const candidatesQuery = useCandidatesQuery(status);
+
+  const sendMessageMutation = useSendMessage();
 
   const isLoading = isLoadingQuery(candidatesQuery);
 
@@ -60,7 +70,42 @@ function RouteComponent() {
           >
             Refresh
           </Button>
+          <Button onClick={() => onClose(true)}>Chat</Button>
         </Flex>
+
+        <Modal
+          centered
+          opened={isChatModal}
+          onClose={() => onClose(false)}
+          title="Chat with Agent"
+          size="lg"
+        >
+          <TextInput
+            label="Escribe tu mensaje para el agente"
+            value={message}
+            onChange={(event) => setMessage(event.currentTarget.value)}
+          />
+          <Button
+            mt="md"
+            loading={sendMessageMutation.isPending}
+            onClick={() => {
+              sendMessageMutation.mutate(message);
+            }}
+          >
+            Enviar
+          </Button>
+
+          {(sendMessageMutation.data || sendMessageMutation.error?.message) && (
+            <Textarea
+              autosize
+              minRows={2}
+              variant="filled"
+              value={
+                sendMessageMutation.data || sendMessageMutation.error?.message
+              }
+            />
+          )}
+        </Modal>
 
         {isLoading && (
           <Center>

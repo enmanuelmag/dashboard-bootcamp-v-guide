@@ -13,6 +13,12 @@ export const env = createEnv({
     VITE_FB_MESSAGING_SENDER_ID: z.string().min(1),
     VITE_FB_APP_ID: z.string().min(1),
     VITE_FRAMEWORK_NAME: z.enum(['react', 'vue', 'svelte', 'angular']),
+
+    //OPEN AI
+    VITE_OPENAI_API_KEY: z.string().min(1),
+    VITE_OPENAI_ORGANIZATION: z.string().min(1),
+    VITE_OPENAI_PROJECT_ID: z.string().min(1),
+    VITE_OPENAI_MODEL_ID: z.string().min(1),
   },
   runtimeEnv: import.meta.env,
 });
