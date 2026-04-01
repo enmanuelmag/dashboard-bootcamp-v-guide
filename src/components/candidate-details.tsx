@@ -1,8 +1,5 @@
 import DataRepo from '#/api/datasource';
-import {
-  useDeleteCandidateMutation,
-  useToggleWorkingMutation,
-} from '#/hooks/mutation/candidate';
+import { useDeleteCandidateMutation } from '#/hooks/mutation/candidate';
 import type { CandidateType } from '#/types/candidate';
 import {
   Badge,
