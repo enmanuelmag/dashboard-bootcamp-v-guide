@@ -1,4 +1,8 @@
-import { useDeleteCandidateMutation } from '#/hooks/mutation/candidate';
+import DataRepo from '#/api/datasource';
+import {
+  useDeleteCandidateMutation,
+  useToggleWorkingMutation,
+} from '#/hooks/mutation/candidate';
 import type { CandidateType } from '#/types/candidate';
 import {
   Badge,
@@ -7,10 +11,12 @@ import {
   Fieldset,
   Flex,
   List,
+  Switch,
   Text,
   Title,
 } from '@mantine/core';
 import { Link } from '@tanstack/react-router';
+import React from 'react';
 
 type CandidateProps = {
   data: CandidateType;
@@ -20,6 +26,22 @@ const CandidateDetails = (props: CandidateProps) => {
   const { data } = props;
 
   const deleteCandidate = useDeleteCandidateMutation();
+
+  const [optimisticWorkingState, updateOptimisticWorkingState] =
+    React.useOptimistic(data.working, (newValue) => !newValue);
+
+  const handleSwitch = (
+    e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>,
+  ) => {
+    React.startTransition(async () => {
+      const newState = e.currentTarget.checked;
+
+      updateOptimisticWorkingState(newState);
+
+      await DataRepo.toggleWorking(data.id, newState);
+    });
+  };
+  console.log('Opti value', optimisticWorkingState);
 
   return (
     <Box>
@@ -41,9 +63,16 @@ const CandidateDetails = (props: CandidateProps) => {
 
       {/* SECCIÓN DE DATOS PROFESIONALES */}
       <Fieldset legend="Professional Info">
-        <Text>Experience: {data.experience} years</Text>
+        <Switch
+          label={optimisticWorkingState ? 'Currently Working' : 'Not Working'}
+          mb={12}
+          checked={optimisticWorkingState || false}
+          onChange={(e) => {
+            handleSwitch(e);
+          }}
+        />
 
-        <Text>Currently Working: {data.working ? 'Yes' : 'No'}</Text>
+        <Text>Experience: {data.experience} years</Text>
 
         <Text mt={12} mb={6}>
           Skills:

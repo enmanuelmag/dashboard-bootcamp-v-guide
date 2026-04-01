@@ -16,6 +16,8 @@ import {
 } from 'firebase/firestore';
 import DataDS from './data-ds';
 import { firebaseDB } from '#/integrations/firebase';
+import { queryClient } from '#/integrations/query/provider';
+import { QKeys } from '#/const/keys';
 
 const CANDIDATES_COL = 'candidates-v1';
 
@@ -118,6 +120,25 @@ export default class FirestoreDS extends DataDS {
     } catch (error) {
       console.error('Error al crear candidato', error);
       throw new Error('Error al crear candidato');
+    }
+  }
+
+  async toggleWorking(id: string, newWorkingValue: boolean) {
+    try {
+      const docRef = doc(firebaseDB, CANDIDATES_COL, id);
+
+      await updateDoc(docRef, {
+        working: newWorkingValue,
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: QKeys.GET_CANDIDATE_BY_ID(id),
+      });
+
+      return newWorkingValue;
+    } catch (error) {
+      console.log('Error al actualizar el working field');
+      throw error;
     }
   }
 }

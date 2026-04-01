@@ -139,3 +139,25 @@ export const useSendMessage = () => {
     },
   });
 };
+
+export const useToggleWorkingMutation = () => {
+  return useMutation({
+    mutationFn: async ({
+      id,
+      newWorkingValue,
+    }: {
+      id: string;
+      newWorkingValue: boolean;
+    }) => {
+      return await DataRepo.toggleWorking(id, newWorkingValue);
+    },
+    onError: (error) => {
+      console.error('Error toggling working state:', error);
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'Error al actualizar estado de trabajo',
+      });
+    },
+  });
+};

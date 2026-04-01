@@ -14,6 +14,11 @@ abstract class DataDS {
   abstract updateCandidate(candidate: UpdateCandidateType): Promise<string>;
 
   abstract deleteCandidate(id: string): Promise<boolean>;
+
+  abstract toggleWorking(
+    id: string,
+    newWorkingValue: boolean,
+  ): Promise<boolean>;
 }
 
 export default DataDS;

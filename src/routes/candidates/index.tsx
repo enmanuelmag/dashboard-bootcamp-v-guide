@@ -9,7 +9,6 @@ import {
   Center,
   Container,
   Flex,
-  Input,
   Loader,
   Modal,
   Select,
@@ -18,7 +17,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { createFileRoute } from '@tanstack/react-router';
-import React from 'react';
+import React, { useDeferredValue } from 'react';
 
 export const Route = createFileRoute('/candidates/')({
   component: RouteComponent,
@@ -28,6 +27,10 @@ function RouteComponent() {
   const [isChatModal, onClose] = React.useState(false);
 
   const [message, setMessage] = React.useState('');
+
+  const [query, setQuery] = React.useState('');
+
+  const deferredQuery = useDeferredValue(query);
 
   const status = useAppStore((state) => state.statusFilter);
   const setState = useAppStore((state) => state.setStatusFilter);
@@ -39,6 +42,22 @@ function RouteComponent() {
   const isLoading = isLoadingQuery(candidatesQuery);
 
   const isLoadingFetching = isLoadingRefetchQuery(candidatesQuery);
+
+  const filteredCandidates = React.useMemo(() => {
+    if (!candidatesQuery.data) {
+      return [];
+    }
+
+    if (deferredQuery.length === 0) {
+      return candidatesQuery.data;
+    }
+
+    return candidatesQuery.data.filter((candidate) =>
+      candidate.name.toLowerCase().includes(deferredQuery),
+    );
+  }, [deferredQuery, candidatesQuery.data]);
+
+  const isSearching = query !== deferredQuery;
 
   return (
     <Container size="xl" py="lg">
@@ -53,6 +72,13 @@ function RouteComponent() {
 
             setState(value as Store['statusFilter']);
           }}
+        />
+
+        <TextInput
+          label="Search by name"
+          placeholder="Type candidate name"
+          value={query}
+          onChange={(event) => setQuery(event.currentTarget.value)}
         />
 
         <Flex align="center" justify="space-between">
@@ -113,9 +139,16 @@ function RouteComponent() {
           </Center>
         )}
 
-        {!isLoading && candidatesQuery.isSuccess && (
+        {isSearching && (
+          <Center>
+            <Loader size="md" />
+            <Text>Filtrando</Text>
+          </Center>
+        )}
+
+        {!isLoading && !isSearching && candidatesQuery.isSuccess && (
           <Flex direction="column" gap="md">
-            {candidatesQuery.data.map((candidate) => (
+            {filteredCandidates.map((candidate) => (
               <CandidateCard key={candidate.id} data={candidate} />
             ))}
           </Flex>
