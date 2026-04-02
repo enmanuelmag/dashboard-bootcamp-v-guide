@@ -10,9 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as privateRouteRouteImport } from './routes/(private)/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CandidatesIndexRouteImport } from './routes/candidates/index'
-import { Route as FormCandidateIdRouteImport } from './routes/form/$candidateId'
 import { Route as DemoUseMemoRouteImport } from './routes/demo/use-memo'
 import { Route as DemoUseCallbackRouteImport } from './routes/demo/use-callback'
 import { Route as DemoQueryFlowRouteImport } from './routes/demo/query-flow'
@@ -20,27 +19,24 @@ import { Route as DemoMemoHocRouteImport } from './routes/demo/memo-hoc'
 import { Route as DemoLifecycleRouteImport } from './routes/demo/lifecycle'
 import { Route as DemoLayoutEffectRouteImport } from './routes/demo/layout-effect'
 import { Route as DemoClassFuncRouteImport } from './routes/demo/class-func'
-import { Route as CandidatesCandidateIdRouteImport } from './routes/candidates/$candidateId'
-import { Route as CandidatesCandidateIdEditRouteImport } from './routes/candidates.$candidateId.edit'
+import { Route as publicRegisterRouteImport } from './routes/(public)/register'
+import { Route as publicLoginRouteImport } from './routes/(public)/login'
+import { Route as privateCandidatesIndexRouteImport } from './routes/(private)/candidates/index'
+import { Route as privateFormCandidateIdRouteImport } from './routes/(private)/form/$candidateId'
+import { Route as privateCandidatesCandidateIdRouteImport } from './routes/(private)/candidates/$candidateId'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const privateRouteRoute = privateRouteRouteImport.update({
+  id: '/(private)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CandidatesIndexRoute = CandidatesIndexRouteImport.update({
-  id: '/candidates/',
-  path: '/candidates/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FormCandidateIdRoute = FormCandidateIdRouteImport.update({
-  id: '/form/$candidateId',
-  path: '/form/$candidateId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoUseMemoRoute = DemoUseMemoRouteImport.update({
@@ -78,22 +74,38 @@ const DemoClassFuncRoute = DemoClassFuncRouteImport.update({
   path: '/demo/class-func',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CandidatesCandidateIdRoute = CandidatesCandidateIdRouteImport.update({
-  id: '/candidates/$candidateId',
-  path: '/candidates/$candidateId',
+const publicRegisterRoute = publicRegisterRouteImport.update({
+  id: '/(public)/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CandidatesCandidateIdEditRoute =
-  CandidatesCandidateIdEditRouteImport.update({
-    id: '/edit',
-    path: '/edit',
-    getParentRoute: () => CandidatesCandidateIdRoute,
+const publicLoginRoute = publicLoginRouteImport.update({
+  id: '/(public)/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const privateCandidatesIndexRoute = privateCandidatesIndexRouteImport.update({
+  id: '/candidates/',
+  path: '/candidates/',
+  getParentRoute: () => privateRouteRoute,
+} as any)
+const privateFormCandidateIdRoute = privateFormCandidateIdRouteImport.update({
+  id: '/form/$candidateId',
+  path: '/form/$candidateId',
+  getParentRoute: () => privateRouteRoute,
+} as any)
+const privateCandidatesCandidateIdRoute =
+  privateCandidatesCandidateIdRouteImport.update({
+    id: '/candidates/$candidateId',
+    path: '/candidates/$candidateId',
+    getParentRoute: () => privateRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
+  '/login': typeof publicLoginRoute
+  '/register': typeof publicRegisterRoute
   '/demo/class-func': typeof DemoClassFuncRoute
   '/demo/layout-effect': typeof DemoLayoutEffectRoute
   '/demo/lifecycle': typeof DemoLifecycleRoute
@@ -101,14 +113,15 @@ export interface FileRoutesByFullPath {
   '/demo/query-flow': typeof DemoQueryFlowRoute
   '/demo/use-callback': typeof DemoUseCallbackRoute
   '/demo/use-memo': typeof DemoUseMemoRoute
-  '/form/$candidateId': typeof FormCandidateIdRoute
-  '/candidates/': typeof CandidatesIndexRoute
-  '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
+  '/candidates/$candidateId': typeof privateCandidatesCandidateIdRoute
+  '/form/$candidateId': typeof privateFormCandidateIdRoute
+  '/candidates/': typeof privateCandidatesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
+  '/login': typeof publicLoginRoute
+  '/register': typeof publicRegisterRoute
   '/demo/class-func': typeof DemoClassFuncRoute
   '/demo/layout-effect': typeof DemoLayoutEffectRoute
   '/demo/lifecycle': typeof DemoLifecycleRoute
@@ -116,15 +129,17 @@ export interface FileRoutesByTo {
   '/demo/query-flow': typeof DemoQueryFlowRoute
   '/demo/use-callback': typeof DemoUseCallbackRoute
   '/demo/use-memo': typeof DemoUseMemoRoute
-  '/form/$candidateId': typeof FormCandidateIdRoute
-  '/candidates': typeof CandidatesIndexRoute
-  '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
+  '/candidates/$candidateId': typeof privateCandidatesCandidateIdRoute
+  '/form/$candidateId': typeof privateFormCandidateIdRoute
+  '/candidates': typeof privateCandidatesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/(private)': typeof privateRouteRouteWithChildren
   '/about': typeof AboutRoute
-  '/candidates/$candidateId': typeof CandidatesCandidateIdRouteWithChildren
+  '/(public)/login': typeof publicLoginRoute
+  '/(public)/register': typeof publicRegisterRoute
   '/demo/class-func': typeof DemoClassFuncRoute
   '/demo/layout-effect': typeof DemoLayoutEffectRoute
   '/demo/lifecycle': typeof DemoLifecycleRoute
@@ -132,16 +147,17 @@ export interface FileRoutesById {
   '/demo/query-flow': typeof DemoQueryFlowRoute
   '/demo/use-callback': typeof DemoUseCallbackRoute
   '/demo/use-memo': typeof DemoUseMemoRoute
-  '/form/$candidateId': typeof FormCandidateIdRoute
-  '/candidates/': typeof CandidatesIndexRoute
-  '/candidates/$candidateId/edit': typeof CandidatesCandidateIdEditRoute
+  '/(private)/candidates/$candidateId': typeof privateCandidatesCandidateIdRoute
+  '/(private)/form/$candidateId': typeof privateFormCandidateIdRoute
+  '/(private)/candidates/': typeof privateCandidatesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/candidates/$candidateId'
+    | '/login'
+    | '/register'
     | '/demo/class-func'
     | '/demo/layout-effect'
     | '/demo/lifecycle'
@@ -149,14 +165,15 @@ export interface FileRouteTypes {
     | '/demo/query-flow'
     | '/demo/use-callback'
     | '/demo/use-memo'
+    | '/candidates/$candidateId'
     | '/form/$candidateId'
     | '/candidates/'
-    | '/candidates/$candidateId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/candidates/$candidateId'
+    | '/login'
+    | '/register'
     | '/demo/class-func'
     | '/demo/layout-effect'
     | '/demo/lifecycle'
@@ -164,14 +181,16 @@ export interface FileRouteTypes {
     | '/demo/query-flow'
     | '/demo/use-callback'
     | '/demo/use-memo'
+    | '/candidates/$candidateId'
     | '/form/$candidateId'
     | '/candidates'
-    | '/candidates/$candidateId/edit'
   id:
     | '__root__'
     | '/'
+    | '/(private)'
     | '/about'
-    | '/candidates/$candidateId'
+    | '/(public)/login'
+    | '/(public)/register'
     | '/demo/class-func'
     | '/demo/layout-effect'
     | '/demo/lifecycle'
@@ -179,15 +198,17 @@ export interface FileRouteTypes {
     | '/demo/query-flow'
     | '/demo/use-callback'
     | '/demo/use-memo'
-    | '/form/$candidateId'
-    | '/candidates/'
-    | '/candidates/$candidateId/edit'
+    | '/(private)/candidates/$candidateId'
+    | '/(private)/form/$candidateId'
+    | '/(private)/candidates/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  privateRouteRoute: typeof privateRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
-  CandidatesCandidateIdRoute: typeof CandidatesCandidateIdRouteWithChildren
+  publicLoginRoute: typeof publicLoginRoute
+  publicRegisterRoute: typeof publicRegisterRoute
   DemoClassFuncRoute: typeof DemoClassFuncRoute
   DemoLayoutEffectRoute: typeof DemoLayoutEffectRoute
   DemoLifecycleRoute: typeof DemoLifecycleRoute
@@ -195,8 +216,6 @@ export interface RootRouteChildren {
   DemoQueryFlowRoute: typeof DemoQueryFlowRoute
   DemoUseCallbackRoute: typeof DemoUseCallbackRoute
   DemoUseMemoRoute: typeof DemoUseMemoRoute
-  FormCandidateIdRoute: typeof FormCandidateIdRoute
-  CandidatesIndexRoute: typeof CandidatesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -208,25 +227,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(private)': {
+      id: '/(private)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof privateRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/candidates/': {
-      id: '/candidates/'
-      path: '/candidates'
-      fullPath: '/candidates/'
-      preLoaderRoute: typeof CandidatesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/form/$candidateId': {
-      id: '/form/$candidateId'
-      path: '/form/$candidateId'
-      fullPath: '/form/$candidateId'
-      preLoaderRoute: typeof FormCandidateIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/use-memo': {
@@ -278,40 +290,66 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoClassFuncRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/candidates/$candidateId': {
-      id: '/candidates/$candidateId'
-      path: '/candidates/$candidateId'
-      fullPath: '/candidates/$candidateId'
-      preLoaderRoute: typeof CandidatesCandidateIdRouteImport
+    '/(public)/register': {
+      id: '/(public)/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof publicRegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/candidates/$candidateId/edit': {
-      id: '/candidates/$candidateId/edit'
-      path: '/edit'
-      fullPath: '/candidates/$candidateId/edit'
-      preLoaderRoute: typeof CandidatesCandidateIdEditRouteImport
-      parentRoute: typeof CandidatesCandidateIdRoute
+    '/(public)/login': {
+      id: '/(public)/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof publicLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(private)/candidates/': {
+      id: '/(private)/candidates/'
+      path: '/candidates'
+      fullPath: '/candidates/'
+      preLoaderRoute: typeof privateCandidatesIndexRouteImport
+      parentRoute: typeof privateRouteRoute
+    }
+    '/(private)/form/$candidateId': {
+      id: '/(private)/form/$candidateId'
+      path: '/form/$candidateId'
+      fullPath: '/form/$candidateId'
+      preLoaderRoute: typeof privateFormCandidateIdRouteImport
+      parentRoute: typeof privateRouteRoute
+    }
+    '/(private)/candidates/$candidateId': {
+      id: '/(private)/candidates/$candidateId'
+      path: '/candidates/$candidateId'
+      fullPath: '/candidates/$candidateId'
+      preLoaderRoute: typeof privateCandidatesCandidateIdRouteImport
+      parentRoute: typeof privateRouteRoute
     }
   }
 }
 
-interface CandidatesCandidateIdRouteChildren {
-  CandidatesCandidateIdEditRoute: typeof CandidatesCandidateIdEditRoute
+interface privateRouteRouteChildren {
+  privateCandidatesCandidateIdRoute: typeof privateCandidatesCandidateIdRoute
+  privateFormCandidateIdRoute: typeof privateFormCandidateIdRoute
+  privateCandidatesIndexRoute: typeof privateCandidatesIndexRoute
 }
 
-const CandidatesCandidateIdRouteChildren: CandidatesCandidateIdRouteChildren = {
-  CandidatesCandidateIdEditRoute: CandidatesCandidateIdEditRoute,
+const privateRouteRouteChildren: privateRouteRouteChildren = {
+  privateCandidatesCandidateIdRoute: privateCandidatesCandidateIdRoute,
+  privateFormCandidateIdRoute: privateFormCandidateIdRoute,
+  privateCandidatesIndexRoute: privateCandidatesIndexRoute,
 }
 
-const CandidatesCandidateIdRouteWithChildren =
-  CandidatesCandidateIdRoute._addFileChildren(
-    CandidatesCandidateIdRouteChildren,
-  )
+const privateRouteRouteWithChildren = privateRouteRoute._addFileChildren(
+  privateRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  privateRouteRoute: privateRouteRouteWithChildren,
   AboutRoute: AboutRoute,
-  CandidatesCandidateIdRoute: CandidatesCandidateIdRouteWithChildren,
+  publicLoginRoute: publicLoginRoute,
+  publicRegisterRoute: publicRegisterRoute,
   DemoClassFuncRoute: DemoClassFuncRoute,
   DemoLayoutEffectRoute: DemoLayoutEffectRoute,
   DemoLifecycleRoute: DemoLifecycleRoute,
@@ -319,8 +357,6 @@ const rootRouteChildren: RootRouteChildren = {
   DemoQueryFlowRoute: DemoQueryFlowRoute,
   DemoUseCallbackRoute: DemoUseCallbackRoute,
   DemoUseMemoRoute: DemoUseMemoRoute,
-  FormCandidateIdRoute: FormCandidateIdRoute,
-  CandidatesIndexRoute: CandidatesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

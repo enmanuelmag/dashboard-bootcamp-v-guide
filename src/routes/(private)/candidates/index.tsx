@@ -19,7 +19,7 @@ import {
 import { createFileRoute } from '@tanstack/react-router';
 import React, { useDeferredValue } from 'react';
 
-export const Route = createFileRoute('/candidates/')({
+export const Route = createFileRoute('/(private)/candidates/')({
   component: RouteComponent,
 });
 

@@ -19,7 +19,7 @@ import { isLoadingMutation } from '#/utils/queyr';
 import { useCandidateByIdQuery } from '#/hooks/query/candidate';
 import { useAppForm } from '#/hooks/form/app.form';
 
-export const Route = createFileRoute('/form/$candidateId')({
+export const Route = createFileRoute('/(private)/form/$candidateId')({
   component: RouteComponent,
 });
 

@@ -4,7 +4,7 @@ import { isLoadingQuery } from '#/utils/queyr';
 import { Center, Container, Loader, Text } from '@mantine/core';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/candidates/$candidateId')({
+export const Route = createFileRoute('/(private)/candidates/$candidateId')({
   component: RouteComponent,
 });
 

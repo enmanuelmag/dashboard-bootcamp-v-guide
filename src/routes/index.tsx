@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Button, Center, Divider, Flex, Text, Title } from '@mantine/core';
+import { useGetUser } from '#/hooks/mutation/auth';
 
 export const Route = createFileRoute('/')({ component: App });
 
 function App() {
+  const user = useGetUser();
+
   return (
     <Center pt="xl">
       <Flex direction="column" gap="lg">
@@ -27,9 +30,16 @@ function App() {
         <Divider />
 
         <Flex direction="column" align="center" gap="xs">
-          <Link to="/candidates">
-            <Button>Go to candidates</Button>
-          </Link>
+          {user && (
+            <Link to="/candidates">
+              <Button>Go to candidates</Button>
+            </Link>
+          )}
+          {!user && (
+            <Link to="/login">
+              <Button>Sign in</Button>
+            </Link>
+          )}
         </Flex>
       </Flex>
     </Center>

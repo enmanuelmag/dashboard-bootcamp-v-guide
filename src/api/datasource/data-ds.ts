@@ -1,4 +1,9 @@
 import type {
+  EmailAndPasswordLoginType,
+  EmailAndPasswordRegisterFormType,
+  UserType,
+} from '#/types/auth';
+import type {
   CandidateType,
   FormCandidateType,
   UpdateCandidateType,
@@ -19,6 +24,21 @@ abstract class DataDS {
     id: string,
     newWorkingValue: boolean,
   ): Promise<boolean>;
+
+  // Auth
+  abstract registerWithEmailAndPassword(
+    params: EmailAndPasswordRegisterFormType,
+  ): Promise<UserType>;
+
+  abstract loginWithEmailAndPassword(
+    params: EmailAndPasswordLoginType,
+  ): Promise<UserType>;
+
+  abstract loginWithGoogle(): Promise<UserType>;
+
+  abstract logout(): Promise<void>;
+
+  abstract getCurrentUser(): Promise<UserType | null>;
 }
 
 export default DataDS;
