@@ -1,8 +1,9 @@
 import CandidateCard from '#/components/candidate-card';
-import { useSendMessage } from '#/hooks/mutation/candidate';
+import { useStreamingMessage } from '#/hooks/mutation/candidate';
 import { useCandidatesQuery } from '#/hooks/query/candidate';
 import { useAppStore } from '#/store';
 import type { Store } from '#/types/store';
+import Markdown from 'react-markdown';
 import { isLoadingQuery, isLoadingRefetchQuery } from '#/utils/queyr';
 import {
   Button,
@@ -11,6 +12,7 @@ import {
   Flex,
   Loader,
   Modal,
+  Paper,
   Select,
   Text,
   Textarea,
@@ -37,7 +39,7 @@ function RouteComponent() {
 
   const candidatesQuery = useCandidatesQuery(status);
 
-  const sendMessageMutation = useSendMessage();
+  const sendMessageMutation = useStreamingMessage();
 
   const isLoading = isLoadingQuery(candidatesQuery);
 
@@ -106,13 +108,16 @@ function RouteComponent() {
           title="Chat with Agent"
           size="lg"
         >
-          <TextInput
+          <Textarea
+            autosize
+            minRows={4}
             label="Escribe tu mensaje para el agente"
             value={message}
             onChange={(event) => setMessage(event.currentTarget.value)}
           />
           <Button
-            mt="md"
+            mt="sm"
+            mb="md"
             loading={sendMessageMutation.isPending}
             onClick={() => {
               sendMessageMutation.mutate(message);
@@ -122,14 +127,11 @@ function RouteComponent() {
           </Button>
 
           {(sendMessageMutation.data || sendMessageMutation.error?.message) && (
-            <Textarea
-              autosize
-              minRows={2}
-              variant="filled"
-              value={
-                sendMessageMutation.data || sendMessageMutation.error?.message
-              }
-            />
+            <Paper withBorder p="md">
+              <Markdown>
+                {sendMessageMutation.data || sendMessageMutation.error?.message}
+              </Markdown>
+            </Paper>
           )}
         </Modal>
 

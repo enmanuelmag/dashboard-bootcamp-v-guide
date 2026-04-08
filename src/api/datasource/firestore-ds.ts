@@ -97,6 +97,7 @@ export default class FirestoreDS extends DataDS {
       const newCandidate: CandidateType = {
         ...candidate,
         id,
+        deleted: false,
       };
 
       const candidateRef = doc(firebaseDB, CANDIDATES_COL, newCandidate.id);

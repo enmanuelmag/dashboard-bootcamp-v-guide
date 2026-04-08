@@ -5,6 +5,7 @@ import type { FormCandidateType, UpdateCandidateType } from '#/types/candidate';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
+import React from 'react';
 
 export const useSaveCandidateMutation = () => {
   const navigate = useNavigate();
@@ -138,6 +139,44 @@ export const useSendMessage = () => {
       });
     },
   });
+};
+
+export const useStreamingMessage = () => {
+  const [text, setText] = React.useState<string>('');
+  const [error, setError] = React.useState<Error | null>(null);
+  const [isPending, setIsPending] = React.useState(false);
+
+  const onChunk = React.useCallback((partialOutput: string) => {
+    setText((prev) => prev + partialOutput);
+  }, []);
+
+  const mutate = React.useCallback(async (message: string) => {
+    setText('');
+    setIsPending(true);
+    setError(null);
+
+    try {
+      const finalOutput = await AgentEngine.runStream(message, onChunk);
+      setText(finalOutput);
+    } catch (error) {
+      notifications.show({
+        color: 'red',
+        title: 'Erro en el streaming',
+        message: 'Error en la generación de texto',
+      });
+      console.error('Error', error);
+      setError(error as Error);
+    } finally {
+      setIsPending(false);
+    }
+  }, []);
+
+  return {
+    isPending,
+    mutate,
+    error,
+    data: text,
+  };
 };
 
 export const useToggleWorkingMutation = () => {

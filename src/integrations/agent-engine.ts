@@ -3,6 +3,7 @@ import { OpenAI } from 'openai';
 
 import { Agent, run, setDefaultOpenAIClient } from '@openai/agents';
 import PromptBuilder from './prompt-builder';
+import { SaveCandidate } from './tools';
 
 class AgentEngine {
   agent: Agent;
@@ -21,8 +22,9 @@ class AgentEngine {
       name: 'Candidate Analyst',
       model: env.VITE_OPENAI_MODEL_ID || 'gpt-5',
       instructions: PromptBuilder.instructions,
+      tools: [SaveCandidate],
       modelSettings: {
-        temperature: 0.25,
+        temperature: 0.1,
         maxTokens: 500,
       },
     });
@@ -33,7 +35,7 @@ class AgentEngine {
 
     const response = await run(this.agent, message, {
       stream: false,
-      maxTurns: 4,
+      maxTurns: 7,
     });
 
     console.log('Usage: ', {
@@ -43,6 +45,30 @@ class AgentEngine {
     });
 
     return response.finalOutput || 'No hubo respuesta';
+  }
+
+  async runStream(userInput: string, onChunk: (partialOutput: string) => void) {
+    const message = await PromptBuilder.generateMessage(userInput);
+
+    const stream = await run(this.agent, message, {
+      stream: true,
+      maxTurns: 7,
+    });
+
+    let finalOutput = '';
+
+    for await (const event of stream) {
+      if (
+        event.type === 'raw_model_stream_event' &&
+        event.data.type === 'output_text_delta'
+      ) {
+        const chunk = event.data.delta;
+        onChunk(chunk);
+        finalOutput += chunk;
+      }
+    }
+
+    return finalOutput;
   }
 }
 
